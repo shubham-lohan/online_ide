@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,7 +10,15 @@
 </head>
 
 <body>
-    <h1>Hellosas</h1>
+    <h1>Hello</h1>
+    
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Submit">
+    </form>
+    <h1>Output</h1>
+    {{output}}
 </body>
 
 </html>
