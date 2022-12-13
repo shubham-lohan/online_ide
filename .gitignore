@@ -155,3 +155,4 @@ media
 migrations/
 
 code_files/
+*.exe
