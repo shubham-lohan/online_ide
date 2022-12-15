@@ -1,0 +1,12 @@
+{% extends "index.html" %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+{% block content %}
+<h1>Hello</h1>
+<p>{{submission.code}}</p>
+
+<p>{{submission.language}}</p>
+{% if submission.user_input %}
+<p>{{submission.user_input}}</p>
+{% endif %}
+{% endblock content %}
