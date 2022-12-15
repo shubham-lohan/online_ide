@@ -4,33 +4,66 @@ from django.shortcuts import redirect, render
 from .forms import SubsmissionForm
 import subprocess
 import uuid
+from django.contrib.auth.decorators import login_required
+from .models import Submissions
 
 
 def index(request):
+    if request.user.is_authenticated:
+        return redirect(home)
+    return render(request, "index.html")
+
+
+@login_required
+def home(request):
     context = {}
-    form = SubsmissionForm(request.POST or None)
-    if form.is_valid():
-        form.save()
-    context['form'] = form
-    print(form)
-    code = (form['code']).data
-    language = form['language'].data
-    filename = str(uuid.uuid4())+"."+language
-    with open('code_files/'+filename, 'w') as file:
-        file.write(code)
-    if language == 'py':
-        result = subprocess.run(['python', "code_files/"+filename], capture_output=True)
-        if result.returncode == 1 or result.returncode != 0:
-            context['output'] = result.stderr.decode()
-        else:
-            context['output'] = result.stdout.decode()
-    if language == 'cpp':
-        result = subprocess.run(['g++', "code_files/"+filename], capture_output=True)
-        if result.returncode == 1 or result.returncode != 0:
-            # compile time error:1
-            # run time error!=0
-            context['output'] = result.stderr.decode()
-        else:
-            result = subprocess.run(["a.exe"], capture_output=True)
-            context['output'] = result.stdout.decode()
-    return render(request, "index.html", context)
+    context['form'] = SubsmissionForm()
+    context['user'] = request.user
+    if request.method == 'POST':
+        form = SubsmissionForm(request.POST or None)
+        context['form'] = form
+        code = (form['code']).data
+        language = form['language'].data
+        filename = str(uuid.uuid4())+"."+language
+        with open(filename, 'w') as file:
+            file.write(code)
+        input_filename = str(uuid.uuid4())+".in"
+        with open(input_filename, 'w') as file:
+            file.write(form['user_input'].data)
+        if language == 'py':
+            result = subprocess.run(['python', filename], capture_output=True, stdin=open(input_filename))
+            if result.returncode == 1 or result.returncode != 0:
+                context['output'] = result.stderr.decode()
+            else:
+                context['output'] = result.stdout.decode()
+        if language == 'cpp':
+            result = subprocess.run(['g++', filename, '-o', filename[:-4]], capture_output=True, stdin=open(input_filename))
+            if result.returncode == 1 or result.returncode != 0:
+                # compile time error:1
+                # run time error!=0
+                context['output'] = result.stderr.decode()
+            else:
+                result = subprocess.run(["./"+filename[:-4]], capture_output=True)
+                context['output'] = result.stdout.decode()
+            subprocess.run(['rm', filename[:-4]])
+        subprocess.run(['rm', filename])
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.user = request.user
+            instance.save()
+        return render(request, "home.html", context)
+    return render(request, "home.html", context)
+
+
+def show_submissions(request, submission_id):
+    submission = Submissions.objects.get(id=submission_id)
+    if submission.user != request.user:
+        return HttpResponse("<h1>Invalid Access</h1>")
+    return render(request, "show_submissions.html", {'submission': submission})
+
+
+@login_required
+def my_submissions(request):
+    submissions = Submissions.objects.filter(user=request.user)
+    context = {'submissions': submissions}
+    return render(request, "submissions.html", context)
