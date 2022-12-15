@@ -1,0 +1,22 @@
+{% extends "index.html" %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<h1>Hello</h1>
+<p>Welcome, {{ user.socialaccount_set.all.0.extra_data.name }} !</p>
+<img src={{ user.socialaccount_set.all.0.get_avatar_url }} alt="profile">
+<a href="{% url 'logout' %}">
+    <button type="button" class="btn btn-danger">Logout</button>
+</a>
+<a href="{% url 'all_submissions' %}">
+    <button type="button" class="btn btn-info">My Submissions</button>
+</a>
+<form action="" method="post">
+    {% csrf_token %}
+    {{form| crispy}}
+    <input type="submit" class="btn btn-primary" value="Submit">
+</form>
+<h1>Output</h1>
+{{output}}
+{% endblock content %}
