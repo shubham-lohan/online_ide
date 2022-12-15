@@ -37,19 +37,20 @@ def home(request):
             else:
                 context['output'] = result.stdout.decode()
         if language == 'cpp':
-            result = subprocess.run(['g++', filename, '-o', filename[:-4]], capture_output=True, stdin=open(input_filename))
+            result = subprocess.run(['g++', filename, '-o', filename[:-4]], capture_output=True)
             if result.returncode == 1 or result.returncode != 0:
                 # compile time error:1
                 # run time error!=0
                 context['output'] = result.stderr.decode()
             else:
-                result = subprocess.run(["./"+filename[:-4]], capture_output=True)
+                result = subprocess.run(["./"+filename[:-4]], capture_output=True, stdin=open(input_filename))
                 context['output'] = result.stdout.decode()
             subprocess.run(['rm', filename[:-4]])
-        subprocess.run(['rm', filename])
+        subprocess.run(['rm', filename, input_filename])
         if form.is_valid():
             instance = form.save(commit=False)
             instance.user = request.user
+            instance.user_output = result.stdout.decode()
             instance.save()
         return render(request, "home.html", context)
     return render(request, "home.html", context)
@@ -59,6 +60,8 @@ def show_submissions(request, submission_id):
     submission = Submissions.objects.get(id=submission_id)
     if submission.user != request.user:
         return HttpResponse("<h1>Invalid Access</h1>")
+    # submission.code = submission.code.encode('utf-8')
+    # # print(submission.code.encode('utf-8'))
     return render(request, "show_submissions.html", {'submission': submission})
 
 
@@ -66,4 +69,4 @@ def show_submissions(request, submission_id):
 def my_submissions(request):
     submissions = Submissions.objects.filter(user=request.user)
     context = {'submissions': submissions}
-    return render(request, "submissions.html", context)
+    return render(request, "my_submissions.html", context)

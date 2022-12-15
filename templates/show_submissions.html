@@ -2,11 +2,14 @@
 {% load crispy_forms_filters %}
 {% load crispy_forms_tags %}
 {% block content %}
-<h1>Hello</h1>
-<p>{{submission.code}}</p>
-
-<p>{{submission.language}}</p>
-{% if submission.user_input %}
-<p>{{submission.user_input}}</p>
-{% endif %}
+<div class="container">
+    <h1>code({{submission.language}})</h1>
+    <p>{{submission.code|linebreaks}}</p>
+    {% if submission.user_input %}
+    <h1>user input</h1>
+    <p>{{submission.user_input}}</p>
+    {% endif %}
+    <h1>user output</h1>
+    <p>{{submission.user_output|linebreaks}}</p>
+</div>
 {% endblock content %}

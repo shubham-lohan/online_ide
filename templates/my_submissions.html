@@ -1,0 +1,24 @@
+{% extends "index.html" %}
+{% load static %}
+{% block content %}
+
+<h1>Hello</h1>
+<p>Welcome, {{ user.socialaccount_set.all.0.extra_data.name }} !</p>
+<img src={{ user.socialaccount_set.all.0.get_avatar_url }} alt="profile">
+<a href="{% url 'home' %}">
+    <button type="button" class="btn btn-primary">Home</button>
+</a>
+<a href="{% url 'logout' %}">
+    <button type="button" class="btn btn-danger">Logout</button>
+</a>
+<br>
+{% for subs in submissions %}
+<a href={% url 'show_submissions' subs.id %}>
+    {% if 'py' in subs.language %}
+    <img src={% static 'image/python.png' %} class="rounded img-fluid" title="{{subs.code}}" width=50px>
+    {% elif 'cpp' in subs.language %}
+    <img src={% static 'image/cpp.png' %} class="rounded img-fluid" title="{{subs.code}}" width=50px>
+    {% endif %}
+</a>
+{% endfor %}
+{% endblock content %}

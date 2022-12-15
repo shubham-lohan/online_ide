@@ -9,7 +9,7 @@
 <a href="{% url 'logout' %}">
     <button type="button" class="btn btn-danger">Logout</button>
 </a>
-<a href="{% url 'all_submissions' %}">
+<a href="{% url 'my_submissions' %}" target="_blank">
     <button type="button" class="btn btn-info">My Submissions</button>
 </a>
 <form action="" method="post">
@@ -18,5 +18,5 @@
     <input type="submit" class="btn btn-primary" value="Submit">
 </form>
 <h1>Output</h1>
-{{output}}
+{{output|linebreaks}}
 {% endblock content %}

@@ -24,6 +24,6 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('login/', auth_views.LoginView.as_view(), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
-    path('my_submissions', views.my_submissions, name="all_submissions"),
+    path('my_submissions', views.my_submissions, name="my_submissions"),
     path("submission/<int:submission_id>/", views.show_submissions, name="show_submissions")
 ]
