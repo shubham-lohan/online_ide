@@ -1,11 +1,5 @@
 from django.db import models
-
-
-# class User(models.Model):
-#     full_name = models.CharField(max_length=100)
-
-#     def __str__(self):
-#         return self.full_name
+from django.contrib.auth.models import User
 
 
 class Submissions(models.Model):
@@ -24,7 +18,7 @@ class Submissions(models.Model):
     status = models.CharField(max_length=1, choices=ACCEPTANCE_STATUS)
     user_input = models.CharField(max_length=1000, null=True, blank=True)
     user_output = models.CharField(max_length=1000, null=True, blank=True)
-    # user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
 
     def __str__(self):
         return f'{self.language}\n{self.code}'
