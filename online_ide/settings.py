@@ -37,7 +37,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'online_ide'
+    'online_ide',
+
+    'django.contrib.sites',
+    # Django-allauth apps
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'crispy_forms',
+    "crispy_bootstrap5",
 ]
 
 MIDDLEWARE = [
@@ -134,3 +143,51 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
+
+
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_EMAIL_VERIFICATION = ("none")
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_SESSION_REMEMBER = False
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+# Provider specific settings
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        # For each OAuth based provider, either add a ``SocialApp``
+        # (``socialaccount`` app) containing the required client
+        # credentials, or list them here:
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        "AUTH_PARAMS": {
+            "access_type": "online",
+        }
+    }
+}
+
+LOGIN_REDIRECT_URL = 'home'
+LOGIN_URL = '/accounts/google/login'
+LOGOUT_REDIRECT_URL = '/'
+
+SESSION_SAVE_EVERY_REQUEST = True
+SESSION_EXPIRE_SECONDS = 2*60*60
+SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
+SESSION_TIMEOUT_REDIRECT = 'logout'
+
+SOCIALACCOUNT_LOGIN_ON_GET = True
+
+# Sets the ID of your site's URL.
+SITE_ID = 3
+
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+
+CRISPY_TEMPLATE_PACK = "bootstrap5"
