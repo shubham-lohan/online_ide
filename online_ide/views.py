@@ -51,6 +51,7 @@ def home(request):
             instance = form.save(commit=False)
             instance.user = request.user
             instance.user_output = result.stdout.decode()
+            instance.name = form['name'].data
             instance.save()
         return render(request, "home.html", context)
     return render(request, "home.html", context)
@@ -67,6 +68,6 @@ def show_submissions(request, submission_id):
 
 @login_required
 def my_submissions(request):
-    submissions = Submissions.objects.filter(user=request.user)
+    submissions = Submissions.objects.filter(user=request.user).order_by('-submission_time')
     context = {'submissions': submissions}
     return render(request, "my_submissions.html", context)

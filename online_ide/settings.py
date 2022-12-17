@@ -185,7 +185,7 @@ SESSION_TIMEOUT_REDIRECT = 'logout'
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
 # Sets the ID of your site's URL.
-SITE_ID = 3
+SITE_ID = 1
 
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"

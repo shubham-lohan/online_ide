@@ -2,23 +2,45 @@
 {% load static %}
 {% block content %}
 
-<h1>Hello</h1>
-<p>Welcome, {{ user.socialaccount_set.all.0.extra_data.name }} !</p>
-<img src={{ user.socialaccount_set.all.0.get_avatar_url }} alt="profile">
-<a href="{% url 'home' %}">
-    <button type="button" class="btn btn-primary">Home</button>
-</a>
-<a href="{% url 'logout' %}">
-    <button type="button" class="btn btn-danger">Logout</button>
-</a>
-<br>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">Home</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item p-2 ">
+                    <a class="nav-link active bg-primary rounded    " aria-current="page"
+                        href="{% url 'my_submissions' %}">My Submissions</a>
+                </li>
+                <li class="nav-item p-2 ">
+                    <a class="nav-link active bg-danger rounded float-end" aria-current="page"
+                        href="{% url 'logout' %}">Logout</a>
+                </li>
+            </ul>
+        </div>
+        <p class="text-light p-2">{{ user.socialaccount_set.all.0.extra_data.name }}</p>
+        <img src={{ user.socialaccount_set.all.0.get_avatar_url }} alt="profile" class="float-end rounded" width="50px">
+    </div>
+</nav>
 {% for subs in submissions %}
 <a href={% url 'show_submissions' subs.id %}>
-    {% if 'py' in subs.language %}
-    <img src={% static 'image/python.png' %} class="rounded img-fluid" title="{{subs.code}}" width=50px>
-    {% elif 'cpp' in subs.language %}
-    <img src={% static 'image/cpp.png' %} class="rounded img-fluid" title="{{subs.code}}" width=50px>
-    {% endif %}
+    <div class="card text-white bg-primary mb-3 float-start m-5 " style="max-width: 100px;" title="{{subs.code}}">
+        <div class="card-header bg-info">{{subs.name}}</div>
+        <div class="card-body bg-dark hover-zoom">
+            <h5 class="card-title">{{subs.language}}</h5>
+            <p class="card-text">
+                {% if 'py' in subs.language %}
+                <img src={% static 'image/python.png' %} class="rounded img-fluid" width="50px">
+                {% elif 'cpp' in subs.language %}
+                <img src={% static 'image/cpp.png' %} class="rounded img-fluid" width="50px">
+                {% endif %}
+            </p>
+        </div>
+    </div>
+
 </a>
 {% endfor %}
 {% endblock content %}

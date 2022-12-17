@@ -2,14 +2,57 @@
 {% load crispy_forms_filters %}
 {% load crispy_forms_tags %}
 {% block content %}
-<div class="container">
-    <h1>code({{submission.language}})</h1>
-    <p>{{submission.code|linebreaks}}</p>
-    {% if submission.user_input %}
-    <h1>user input</h1>
-    <p>{{submission.user_input}}</p>
-    {% endif %}
-    <h1>user output</h1>
-    <p>{{submission.user_output|linebreaks}}</p>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">Home</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item p-2 ">
+                    <a class="nav-link active bg-primary rounded    " aria-current="page"
+                        href="{% url 'my_submissions' %}">My Submissions</a>
+                </li>
+                <li class="nav-item p-2 ">
+                    <a class="nav-link active bg-danger rounded float-end" aria-current="page"
+                        href="{% url 'logout' %}">Logout</a>
+                </li>
+            </ul>
+        </div>
+        <p class="text-light p-2">{{ user.socialaccount_set.all.0.extra_data.name }}</p>
+        <img src={{ user.socialaccount_set.all.0.get_avatar_url }} alt="profile" class="float-end rounded" width="50px">
+    </div>
+</nav>
+<div class="container p-5">
+    <div class="row">
+        <div class="col">
+            <div class="card border-info mb-3" style="max-width: 18rem;">
+                <div class="card-header">
+                    <h1>code({{submission.language}})</h1>
+                </div>
+                <div class="card-body text-dark">
+                    <h5 class="card-title">{{subs.name}}</h5>
+                    <p class="card-text">
+                        {{submission.code|linebreaks}}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card border-success mb-3" style="max-width: 18rem;">
+                <div class="card-header">
+                    <h1>user output</h1>
+                </div>
+                <div class="card-body text-success">
+                    <h5 class="card-title">{{subs.name}}</h5>
+                    <p class="card-text">
+                        {{submission.user_output|linebreaks}}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock content %}
