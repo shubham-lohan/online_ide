@@ -1,7 +1,7 @@
 {% extends "index.html" %}
 {% load static %}
 {% block content %}
-
+{% load my_tags %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="/">Home</a>
@@ -32,10 +32,10 @@
         <div class="card-body bg-dark hover-zoom">
             <h5 class="card-title">{{subs.language}}</h5>
             <p class="card-text">
-                {% if 'py' in subs.language %}
-                <img src={% static 'image/python.png' %} class="rounded img-fluid" width="50px">
-                {% elif 'cpp' in subs.language %}
-                <img src={% static 'image/cpp.png' %} class="rounded img-fluid" width="50px">
+                {% if subs.language|is_equal:"py" %}
+                <img src={% static 'image/python.png' %} class="rounded img-fluid" width="60px">
+                {% elif subs.language|is_equal:"cpp" %}
+                <img src={% static 'image/cpp.png' %} class="rounded img-fluid" width="60px">
                 {% endif %}
             </p>
         </div>

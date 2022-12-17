@@ -1,6 +1,7 @@
 {% extends "index.html" %}
 {% load crispy_forms_filters %}
 {% load crispy_forms_tags %}
+{% load my_tags %}
 {% block content %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
@@ -54,5 +55,29 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col">
+            <label for="sharewith">Share with</label><br>
+            {% for people in share_with%}
+            {{people.email}}
+            <br>
+            {% endfor %}
+        </div>
+        <div class="col">
+            {% if submission.user.email|is_equal:request.user.email%}
+            Share this code
+            <form action="" method="post">
+                {% csrf_token %}
+                <select class="form-select" name="share_with">
+                    {% for user in users %}
+                    <option value="{{user.email}}">{{user.email}}</option>
+                    {% endfor %}
+                </select>
+                <input type="submit" class="btn btn-primary" value="Submit">
+            </form>
+            {% endif %}
+        </div>
+    </div>
+
 </div>
 {% endblock content %}

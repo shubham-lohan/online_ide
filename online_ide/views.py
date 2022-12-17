@@ -57,13 +57,28 @@ def home(request):
     return render(request, "home.html", context)
 
 
+@login_required
 def show_submissions(request, submission_id):
     submission = Submissions.objects.get(id=submission_id)
-    if submission.user != request.user:
+    print(submission.user, request.user)
+    if submission.user != request.user and (submission.user != request.user and request.user not in submission.share_with.all()):
         return HttpResponse("<h1>Invalid Access</h1>")
     # submission.code = submission.code.encode('utf-8')
     # # print(submission.code.encode('utf-8'))
-    return render(request, "show_submissions.html", {'submission': submission})
+    if request.method == 'POST':
+        print(request.POST)
+        people = request.POST['share_with']
+        user = User.objects.filter(email=people).first()
+        print("user", user)
+        if user:
+            submission.share_with.add(user)
+            submission.save()
+    users = User.objects.all()
+    print(users)
+    return render(request, "show_submissions.html", {'submission': submission,
+                                                     'share_with': submission.share_with.all(),
+                                                     'users': users
+                                                     })
 
 
 @login_required
