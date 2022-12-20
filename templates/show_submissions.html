@@ -62,6 +62,18 @@
             {{people.email}}
             <br>
             {% endfor %}
+            {% if submission.user.email|is_equal:request.user.email%}
+            Remove access
+            <form action="" method="post">
+                {% csrf_token %}
+                <select class="form-select" name="remove_access">
+                    {% for user in share_with %}
+                    <option value="{{user.email}}">{{user.email}}</option>
+                    {% endfor %}
+                </select>
+                <input type="submit" class="btn btn-primary" value="Submit">
+            </form>
+            {% endif %}
         </div>
         <div class="col">
             {% if submission.user.email|is_equal:request.user.email%}

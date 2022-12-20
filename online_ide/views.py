@@ -67,12 +67,20 @@ def show_submissions(request, submission_id):
     # # print(submission.code.encode('utf-8'))
     if request.method == 'POST':
         print(request.POST)
-        people = request.POST['share_with']
-        user = User.objects.filter(email=people).first()
-        print("user", user)
-        if user:
-            submission.share_with.add(user)
-            submission.save()
+        if 'share_with' in request.POST.keys():
+            people = request.POST['share_with']
+            user = User.objects.filter(email=people).first()
+            print("user", user)
+            if user:
+                submission.share_with.add(user)
+                submission.save()
+        else:
+            print(request.POST['remove_access'])
+            people = request.POST['remove_access']
+            user = User.objects.filter(email=people).first()
+            if user:
+                submission.share_with.remove(user)
+                submission.save()
     users = User.objects.all()
     print(users)
     return render(request, "show_submissions.html", {'submission': submission,
